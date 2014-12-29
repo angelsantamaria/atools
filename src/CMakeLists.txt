@@ -17,7 +17,7 @@ INCLUDE_DIRECTORIES(./math_fc ./alg_fc ./debug_fc ./cv_fc ./rot_fc ${EIGEN_INCLU
 ADD_LIBRARY(atools SHARED ${sources})
 
 # link necessary libraries
-TARGET_LINK_LIBRARIES(atools ${EIGEN_LIBRARY} ${Boost_LIBRARIES} ${OpenCV_LIBS}) 
+TARGET_LINK_LIBRARIES(atools ${EIGEN_LIBRARY} ${Boost_LIBRARIES} ${OpenCV_LIBS} rt) 
 
 # install
 INSTALL(TARGETS atools
