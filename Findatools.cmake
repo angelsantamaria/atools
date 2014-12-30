@@ -1,6 +1,6 @@
 #edit the following line to add the librarie's header files
 FIND_PATH(atools_INCLUDE_DIR
-	NAMES math_fc.h
+	NAMES alg_fc.h cv_fc.h debug_fc.h math_fc.h rot_fc.h
 	PATHS /usr/include /usr/local/include /usr/local/include/atools)
 
 FIND_LIBRARY(atools_LIBRARY
