@@ -20,6 +20,7 @@
 
 //atools stuff
 #include <math_fc.h>
+#include <debug_fc.h>
 
 using namespace Eigen;
 using namespace std;
