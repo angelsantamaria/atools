@@ -29,10 +29,13 @@ void v2skew(const Vector3d& v, Matrix3d& M_sk, MatrixXd& V_sk)
 void v2aaxis(const Vector3d& v, double& angle, Vector3d& axis)
 {
 	angle = sqrt(v.dot(v));
-	if (angle>EPS)
+	// if (angle>EPS)
 		axis = v/angle;
-	else
-		axis = Vector3d::Zero();
+	// else
+	// {
+	// 	axis = Vector3d::Zero();
+	// 	cout << "here"<<endl;
+	// }
 }
 void v2aaxis(const Vector3d& v, double& angle, Vector3d& axis, MatrixXd& Aangle_v)
 {
