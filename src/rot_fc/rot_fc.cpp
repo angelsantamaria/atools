@@ -193,6 +193,8 @@ void qPredict(const Quaterniond& q, const Vector3d& w, Quaterniond& qpred, const
 			break;
 	}
 
+
+
 	qpred = qn.normalized(); // Euler integration - fits with Jacobians
 }
 void qPredict(const Quaterniond& q, const Vector3d& w, Quaterniond& qpred, const double& dt, const int& met, MatrixXd& Q_q)
