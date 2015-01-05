@@ -88,16 +88,16 @@ namespace atools{
 
     switch (met){
     	case 'l':
-  	  //Assign the last non nan value to every outlier
-  	  for (int ii = 0; ii < outliers_idx.cols(); ++ii)
-  	  {
-  	    uint idx = outliers_idx(0,ii);
-  	    while (isnan(data_out(1,outliers_idx(ii))) && idx!=0)
-  	    {
-  	      data_out(1,outliers_idx(ii)) = data_out(1,idx);
-  	      idx=idx-1;
-  	    }  
-  	  }
+    	  //Assign the last non nan value to every outlier
+    	  for (int ii = 0; ii < outliers_idx.cols(); ++ii)
+    	  {
+    	    uint idx = outliers_idx(0,ii);
+    	    while (isnan(data_out(1,outliers_idx(ii))) && idx!=0)
+    	    {
+    	      data_out(1,outliers_idx(ii)) = data_out(1,idx);
+    	      idx=idx-1;
+    	    }  
+    	  }
     	  break;
     }
   }
