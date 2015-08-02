@@ -46,8 +46,9 @@ namespace atools{
           cout << "An exception occurred. Ignoring frame. " << e.err << endl;
           return false;
       }
+
       return true;
-  } 
+  }
 
 //<-- RECTIFICAR ---
   //http://ece631web.groups.et.byu.net/Lectures/ECEn631%2014%20-%20Calibration%20and%20Rectification.pdf
