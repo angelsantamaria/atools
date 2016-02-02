@@ -13,9 +13,9 @@
 #include <sys/time.h>
 #include <numeric> 
 #include <vector>
-#include <Eigen/Dense>
-#include <Eigen/Eigenvalues>
-#include <Eigen/SVD>
+#include <eigen3/Eigen/Dense>
+/*#include <Eigen/Eigenvalues>
+#include <Eigen/SVD>*/
 
 #include <math_fc.h>
 

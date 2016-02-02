@@ -14,9 +14,9 @@
 #include <vector>
 
 //Eigen stuff
-#include <Eigen/Dense>
-#include <Eigen/Eigenvalues>
-#include <Eigen/SVD>
+#include <eigen3/Eigen/Dense>
+/*#include <Eigen/Eigenvalues>
+#include <Eigen/SVD>*/
 
 
 using namespace Eigen;

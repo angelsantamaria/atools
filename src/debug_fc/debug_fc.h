@@ -12,10 +12,10 @@
 #include <sys/stat.h>
 #include <numeric> 
 #include <vector>
-#include <Eigen/Dense>
-#include <Eigen/Eigenvalues>
+#include <eigen3/Eigen/Dense>
+/*#include <Eigen/Eigenvalues>
 #include <Eigen/SVD>
-
+*/
 using namespace Eigen;
 using namespace std;
 
