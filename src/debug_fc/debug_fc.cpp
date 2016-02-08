@@ -40,12 +40,14 @@ namespace atools{
 		stringstream text;
 	    text << bash_color(c) << msg << "\033[0m";
 		cout << text.str();
+		restart_white();
 	}
 	void print(const double& msg, const color& c=white)
 	{
 		stringstream text;
 		text << msg;
 		print(text.str(),c);
+		restart_white();
 	}
 	void print(const MatrixXd& msg, const color& c=white)
 	{
@@ -53,6 +55,7 @@ namespace atools{
 		IOFormat OctaveFmt(StreamPrecision, 0, ", ", ";\n", "", "", "[", "]");
 	    text << bash_color(c) << msg.format(OctaveFmt) << "\033[0m";
 		cout << text.str();
+		restart_white();
 	}
 
 	void print(const Quaterniond& msg, const color& c=white)
@@ -60,5 +63,13 @@ namespace atools{
 		stringstream quat;
 		quat << "[" << msg.w() << ";\n" << msg.x() << ";\n" << msg.y() << ";\n" << msg.z() << "]";
 		print(quat.str(),white);
+		restart_white();
+	}
+
+	void restart_white(void)
+	{
+		stringstream text;
+		text << "\033[1;37m\033[0m";
+		cout << text.str();
 	}
 } // End of atools namespace

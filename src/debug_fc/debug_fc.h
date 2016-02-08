@@ -39,6 +39,7 @@ namespace atools{
     void print(const MatrixXd& msg, const color& c);
     void print(const Quaterniond& msg, const color& c);
     string bash_color(const color& c);
+    void restart_white(void);
 }
 
 #endif
