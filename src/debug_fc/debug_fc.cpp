@@ -70,6 +70,6 @@ namespace atools{
 	{
 		stringstream text;
 		text << "\033[1;37m\033[0m";
-		cout << text.str();
+		cout << text.str() << flush;
 	}
 } // End of atools namespace
