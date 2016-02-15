@@ -39,8 +39,8 @@ namespace atools{
     *	M_sk: Skew symmetric matrix (1rst row: 0 -z -y)
     * 	J_sk(optional): Jacobian r.t. skew symmetric matrix.
     */
-    void v2skew(const Vector3d& vec, Matrix3d& M_sk);
-    void v2skew(const Vector3d& vec, Matrix3d& M_sk, MatrixXd& V_sk);
+    void v2skew(const Vector3f& vec, Matrix3f& M_sk);
+    void v2skew(const Vector3f& vec, Matrix3f& M_sk, MatrixXf& V_sk);
 
     /**
     * \brief Vector to Angle-axis representation
@@ -55,9 +55,9 @@ namespace atools{
     * 	Jangle_v (optional): Jacobian of "angle" wrt the vector.
     *	Jaxis_v (optional):  Jacobian of the "axis" wrt the vector.
     */   
-    void v2aaxis(const Vector3d& vec, double& angle, Vector3d& axis);
-    void v2aaxis(const Vector3d& vec, double& angle, Vector3d& axis, MatrixXd& Aangle_v);
-    void v2aaxis(const Vector3d& vec, double& angle, Vector3d& axis, MatrixXd& Aangle_v, MatrixXd& Aaxis_v);
+    void v2aaxis(const Vector3f& vec, float& angle, Vector3f& axis);
+    void v2aaxis(const Vector3f& vec, float& angle, Vector3f& axis, MatrixXf& Aangle_v);
+    void v2aaxis(const Vector3f& vec, float& angle, Vector3f& axis, MatrixXf& Aangle_v, MatrixXf& Aaxis_v);
 
 
     /**
@@ -71,7 +71,7 @@ namespace atools{
     * Output:
     *	R:    Rotation matrix.
     */
-	void v2R(const Vector3d& vec, Matrix3d& R);
+	void v2R(const Vector3f& vec, Matrix3f& R);
 
     /**
     * \brief Rotation vector to quaternion
@@ -85,8 +85,8 @@ namespace atools{
     *   J_v:  Jacobian r.t. rotation vector.
     * 
     */
-    void v2q(const Vector3d& vec, Quaterniond& q);
-    void v2q(const Vector3d& vec, Quaterniond& q, MatrixXd& Q_v);
+    void v2q(const Vector3f& vec, Quaternionf& q);
+    void v2q(const Vector3f& vec, Quaternionf& q, MatrixXf& Q_v);
 
     /**
     * \brief Angle-axis to quaternion
@@ -103,9 +103,9 @@ namespace atools{
     *	J_axis (optional):    Jacobian wrt "axis".
     * 
     */
-	void aaxis2q(const double& angle, const Vector3d& axis, Quaterniond& q);
-	void aaxis2q(const double& angle, const Vector3d& axis, Quaterniond& q, MatrixXd& Q_angle);
-	void aaxis2q(const double& angle, const Vector3d& axis, Quaterniond& q, MatrixXd& Q_angle, MatrixXd& Q_axis);
+	void aaxis2q(const float& angle, const Vector3f& axis, Quaternionf& q);
+	void aaxis2q(const float& angle, const Vector3f& axis, Quaternionf& q, MatrixXf& Q_angle);
+	void aaxis2q(const float& angle, const Vector3f& axis, Quaternionf& q, MatrixXf& Q_angle, MatrixXf& Q_axis);
 
     /**
     * \brief Angular velocity to Omega matrix
@@ -120,8 +120,8 @@ namespace atools{
     *   Omega:  Omega matrix.
     *   J_w (optional): Jacobian r.t. w.
     */
-    void w2omega(const Vector3d& w, Matrix4d& Omega);
-    void w2omega(const Vector3d& w, Matrix4d& Omega, MatrixXd& O_w);
+    void w2omega(const Vector3f& w, Matrix4d& Omega);
+    void w2omega(const Vector3f& w, Matrix4d& Omega, MatrixXf& O_w);
 
     /**
     * \brief Theta vector (minimal representation) to quaternion
@@ -134,7 +134,7 @@ namespace atools{
     * Output:
     *   q:  Quaternion with convenion: q = [qw qx qy qz] with qw the scalar element.
     */
-    void theta2q(const Vector3d& theta, Quaterniond& q);
+    void theta2q(const Vector3f& theta, Quaternionf& q);
 
     /**
     * \brief Rotation matrix to quaternion conversion.
@@ -148,7 +148,7 @@ namespace atools{
     *   R:  Rotation matrix body-to-world.
     * 
     */
-    void R2q(const Matrix3d& R, Quaterniond& q);
+    void R2q(const Matrix3f& R, Quaternionf& q);
 
     /**
     * \brief Rotation to Euler angles.
@@ -161,7 +161,7 @@ namespace atools{
     * Output:
     *   e:    Euler angles: e = [roll pitch yaw]'.
     */
-    void R2e(const Matrix3d& R, Vector3d& e);
+    void R2e(const Matrix3f& R, Vector3f& e);
 
     /**
     * \brief Euler to Rotation Matrix
@@ -175,7 +175,7 @@ namespace atools{
     *   R:  Rotation matrix.
     * 
     */
-    void e2R(const Vector3d& e, Matrix3d& R);
+    void e2R(const Vector3f& e, Matrix3f& R);
 
     /**
     * \brief Quaternion product
@@ -188,7 +188,7 @@ namespace atools{
     * Output:
     *   q:  Quaternion with convenion: q = [qw qx qy qz] with qw the scalar element. 
     */
-    void qProd(const Quaterniond& q1,const Quaterniond& q2, Quaterniond& q);
+    void qProd(const Quaternionf& q1,const Quaternionf& q2, Quaternionf& q);
 
 
     /**
@@ -220,11 +220,11 @@ namespace atools{
     *   Q_q:  Jacobian wrt quaternion.
     *   Q_w:  Jacobian wrt rotation angles or angular rates.
     */   
-    void qPredict(const Quaterniond& q, const Vector3d& w, Quaterniond& qpred);
-    void qPredict(const Quaterniond& q, const Vector3d& w, Quaterniond& qpred, const double& dt);
-    void qPredict(const Quaterniond& q, const Vector3d& w, Quaterniond& qpred, const double& dt, const int& met);
-    void qPredict(const Quaterniond& q, const Vector3d& w, Quaterniond& qpred, const double& dt, const int& met, MatrixXd& Q_q);
-    void qPredict(const Quaterniond& q, const Vector3d& w, Quaterniond& qpred, const double& dt, const int& met, MatrixXd& Q_q, MatrixXd& Q_w);
+    void qPredict(const Quaternionf& q, const Vector3f& w, Quaternionf& qpred);
+    void qPredict(const Quaternionf& q, const Vector3f& w, Quaternionf& qpred, const float& dt);
+    void qPredict(const Quaternionf& q, const Vector3f& w, Quaternionf& qpred, const float& dt, const int& met);
+    void qPredict(const Quaternionf& q, const Vector3f& w, Quaternionf& qpred, const float& dt, const int& met, MatrixXf& Q_q);
+    void qPredict(const Quaternionf& q, const Vector3f& w, Quaternionf& qpred, const float& dt, const int& met, MatrixXf& Q_q, MatrixXf& Q_w);
 
     /**
     * \brief Pi matrix construction from quaternion.
@@ -242,7 +242,7 @@ namespace atools{
     * 
     *   is the Jacobian of OMEGA*Q with respect to W
     */
-    void q2Pi(const Quaterniond& q,MatrixXd& Pi);
+    void q2Pi(const Quaternionf& q,MatrixXf& Pi);
 
     /**
     * \brief Quaternion to rotation matrix
@@ -256,8 +256,8 @@ namespace atools{
     *   R:    Rotation matrix.
     *   JR_q (optional): Rotation matrix Jacobian wrt q. 
     */
-    void q2R(const Quaterniond& q, Matrix3d& R);
-    void q2R(const Quaterniond& q, Matrix3d& R, MatrixXd& JR_q);
+    void q2R(const Quaternionf& q, Matrix3f& R);
+    void q2R(const Quaternionf& q, Matrix3f& R, MatrixXf& JR_q);
 
     /**
     * \brief Quaternion conjugate
@@ -271,8 +271,8 @@ namespace atools{
     *   q_c:  Quaternion conjugate maintaining the input convenion.
     *   Q_qc (optional): Jacobian of quaternion conjugate.
     */
-    void q2qc(const Quaterniond& q, Quaterniond& qc);
-    void q2qc(const Quaterniond& q, Quaterniond& qc, MatrixXd& Q_qc);
+    void q2qc(const Quaternionf& q, Quaternionf& qc);
+    void q2qc(const Quaternionf& q, Quaternionf& qc, MatrixXf& Q_qc);
 
     /**
     * \brief Quaternion to Euler angles conversion
@@ -286,8 +286,8 @@ namespace atools{
     *   e:    Euler angles: e = [roll pitch yaw]'.
     *   E_q (optional):  Jacobian wrt quaternion.
     */
-    void q2e(const Quaterniond& q, Vector3d& e);
-    void q2e(const Quaterniond& q, Vector3d& e, MatrixXd& E_q);
+    void q2e(const Quaternionf& q, Vector3f& e);
+    void q2e(const Quaternionf& q, Vector3f& e, MatrixXf& E_q);
 
     /**
     * \brief Quaternion to rotated angle and rotation axis vector.
@@ -304,8 +304,8 @@ namespace atools{
     *   Aangle_q (optional): Angle Jacobian wrt q.
     *   Aaxis_q (optional):  Axis Jacobian wrt q.
     */
-    void q2aaxis(const Quaterniond& q, double& angle, Vector3d& axis);
-    void q2aaxis(const Quaterniond& q, double& angle, Vector3d& axis, MatrixXd& Aangle_q, MatrixXd& Aaxis_q);
+    void q2aaxis(const Quaternionf& q, float& angle, Vector3f& axis);
+    void q2aaxis(const Quaternionf& q, float& angle, Vector3f& axis, MatrixXf& Aangle_q, MatrixXf& Aaxis_q);
 
 
     /**
@@ -321,8 +321,8 @@ namespace atools{
     *   R:    Rotation matrix body-to-world.
     *   JR_e (optional):  Jacobian wrt Euler angles.
     */
-    void e2R(const Vector3d& e, Matrix3d& R);
-    void e2R(const Vector3d& e, Matrix3d& R, MatrixXd& JR_e);
+    void e2R(const Vector3f& e, Matrix3f& R);
+    void e2R(const Vector3f& e, Matrix3f& R, MatrixXf& JR_e);
 
     /**
     * \brief  Euler angles to quaternion conversion
@@ -336,8 +336,8 @@ namespace atools{
     *   q:    Quaternion with convenion: q = [qw qx qy qz] with qw the scalar element.
     *   Q_e:  Jacobian wrt Euler angles.
     */
-    void e2q(const Vector3d& e, Quaterniond& q);
-    void e2q(const Vector3d& e, Quaterniond& q, MatrixXd& Q_e);
+    void e2q(const Vector3f& e, Quaternionf& q);
+    void e2q(const Vector3f& e, Quaternionf& q, MatrixXf& Q_e);
 
 } // End of atools namespace
 

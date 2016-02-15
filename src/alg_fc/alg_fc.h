@@ -47,7 +47,7 @@ namespace atools{
     *       data_out: Output data matrix with outliers filled depending on "met".
     *       outliers_idx: Outliers original matrix position indexes.
     */
-    void check_outliers(const MatrixXd& data_raw, const char& met, MatrixXd& data_out, MatrixXd& outliers_idx);
+    void check_outliers(const MatrixXf& data_raw, const char& met, MatrixXf& data_out, MatrixXf& outliers_idx);
 
     /**
     * \brief Sort using indexes
@@ -58,23 +58,23 @@ namespace atools{
     *       Second row: data.
     *
     */      
-    MatrixXd sort_with_idx(const MatrixXd& data_raw);
+    MatrixXf sort_with_idx(const MatrixXf& data_raw);
 
     class COutlier_detector
     {
       private:
 
-        double num;
-        double mean;
-        double M2;
-        double data;
-        double stddev;
+        float num;
+        float mean;
+        float M2;
+        float data;
+        float stddev;
 
       public:
         COutlier_detector();
         ~COutlier_detector();
-        void online_mean_stddev(const double& data);
-        bool check_if_outlier(const double& data);
+        void online_mean_stddev(const float& data);
+        bool check_if_outlier(const float& data);
 
       
     }; 
@@ -84,7 +84,7 @@ namespace atools{
     *
     * Get random number. Seed initialized every time with system clock.
     */    
-    double get_rand();
+    float get_rand();
 
 } // End of namespace atools
 

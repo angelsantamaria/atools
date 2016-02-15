@@ -40,8 +40,8 @@ namespace atools{
     * It normalizes by data size (cols num.) and produces the square root of
     * the second moment of the sample about its mean
     */
-    double std_deviation(const MatrixXd& vec,const double mean);
-    double std_deviation(const MatrixXd& vec);
+    float std_deviation(const MatrixXf& vec,const float mean);
+    float std_deviation(const MatrixXf& vec);
 
     /**
     * \brief Normalize vector
@@ -50,8 +50,8 @@ namespace atools{
     *  V (It is equal to V/norm(V)) and its jacobian.
     *  jacMethod: Jacobian method to apply. 0: scalar. 1: full vector.
     */
-    void norm_vector(const MatrixXd& vec, MatrixXd& vecn);
-    void norm_vector(const MatrixXd& vec,const int& jacMethod, MatrixXd& vecn, MatrixXd& jacobian);
+    void norm_vector(const MatrixXf& vec, MatrixXf& vecn);
+    void norm_vector(const MatrixXf& vec,const int& jacMethod, MatrixXf& vecn, MatrixXf& jacobian);
 } // End of atools namespace
 
 #endif

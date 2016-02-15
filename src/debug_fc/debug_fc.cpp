@@ -42,14 +42,14 @@ namespace atools{
 		cout << text.str();
 		restart_white();
 	}
-	void print(const double& msg, const color& c=white)
+	void print(const float& msg, const color& c=white)
 	{
 		stringstream text;
 		text << msg;
 		print(text.str(),c);
 		restart_white();
 	}
-	void print(const MatrixXd& msg, const color& c=white)
+	void print(const MatrixXf& msg, const color& c=white)
 	{
 		stringstream text;
 		IOFormat OctaveFmt(StreamPrecision, 0, ", ", ";\n", "", "", "[", "]");
@@ -58,7 +58,7 @@ namespace atools{
 		restart_white();
 	}
 
-	void print(const Quaterniond& msg, const color& c=white)
+	void print(const Quaternionf& msg, const color& c=white)
 	{
 		stringstream quat;
 		quat << "[" << msg.w() << ";\n" << msg.x() << ";\n" << msg.y() << ";\n" << msg.z() << "]";

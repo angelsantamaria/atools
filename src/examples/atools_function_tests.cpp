@@ -35,14 +35,14 @@ int main(int argc, char *argv[])
   print("Program to Test individual functions involved in ESKF Odometry algorithm\n",green);	
 
   string perm;
-  MatrixXd data_m(1,10);
+  MatrixXf data_m(1,10);
 
   // perm = get_yn("Do you want to test math functions? (Y/n)\n");
   // if (perm=="y"){
   //   // Check std
   //   print("_____STD dev.____________\n",magenta);	
   //   data_m << 1,2,3,4,5,6,7,8,9,10;
-  //   double std_dev = std_deviation(data_m);
+  //   float std_dev = std_deviation(data_m);
   //   print("Initial data: ",white);
   //   print(data_m,white);
   //   text.str(string());
@@ -53,8 +53,8 @@ int main(int argc, char *argv[])
   //   // Check vector norm
   //   print("_____Vector Norm____________\n",magenta);   
   //   data_m << 1,2,3,4,5,6,7,8,9,10;
-  //   MatrixXd vec_n;
-  //   MatrixXd jacobian;
+  //   MatrixXf vec_n;
+  //   MatrixXf jacobian;
   //   norm_vector(data_m,0,vec_n,jacobian);
   //   print("Initial data: ",white);
   //   print(data_m,white);
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
   //   // Sort with index check
   //   print("_____Sort matrix with indexes__\n",magenta);	
   //   data_m << 4,7,3,6,8,9,2,1,10,5;
-  //   MatrixXd sorted = sort_with_idx(data_m);
+  //   MatrixXf sorted = sort_with_idx(data_m);
   //   print("Initial data: ",white);
   //   print(data_m,white);
   //   print("\nResult: \n",white);
@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
   //   // Check outliers
   //   print("_____Remove Outliers____________\n",magenta);	
   //   data_m << 10,9,11,18,8,9,10,25,10,9;
-  //   MatrixXd no_out,idx_out;
+  //   MatrixXf no_out,idx_out;
   //   check_outliers(data_m,'n',no_out,idx_out);
   //   print("Initial data: ",white);
   //   print(data_m,white);
@@ -134,10 +134,10 @@ int main(int argc, char *argv[])
 //
 //    // Vector to skew
 //    print("_____Vector to skew________\n",magenta);
-//    Vector3d v;
+//    Vector3f v;
 //    v << 1,2,3;
-//    Matrix3d M_sk;
-//    MatrixXd V_sk;
+//    Matrix3f M_sk;
+//    MatrixXf V_sk;
 //    v2skew(v,M_sk,V_sk);
 //    print("Initial data: \n",white);
 //    print(v,white);
@@ -150,9 +150,9 @@ int main(int argc, char *argv[])
 //
 //    // vec to angle-axis
 //    print("_____Vector to Angle-axis____________\n",magenta);
-//    double angle;
-//    Vector3d axis;
-//    MatrixXd Aangle_v,Aaxis_v;
+//    float angle;
+//    Vector3f axis;
+//    MatrixXf Aangle_v,Aaxis_v;
 //    v2aaxis(v,angle,axis,Aangle_v,Aaxis_v);
 //    print("Initial data: \n",white);
 //    print(v,white);
@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
 //
 //    // vec to R
 //    print("_____Rotation vector to R____________\n",magenta);
-//    Matrix3d R;
+//    Matrix3f R;
 //    v2R(v,R);
 //    print("Initial data: \n",white);
 //    print(v,white);
@@ -179,8 +179,8 @@ int main(int argc, char *argv[])
 //
 //    // vec to q
 //    print("_____Vector to quaternion____________\n",magenta);
-//    Quaterniond q;
-//    MatrixXd Q_v;
+//    Quaternionf q;
+//    MatrixXf Q_v;
 //    v2q(v,q,Q_v);
 //    print("Initial data: \n",white);
 //    print("Vector: \n",white);
@@ -194,7 +194,7 @@ int main(int argc, char *argv[])
 //
 //    // Aaxis to q
 //    print("_____Angle-axis to Quaternion____________\n",magenta);
-//    MatrixXd Q_angle,Q_axis;
+//    MatrixXf Q_angle,Q_axis;
 //    aaxis2q(angle,axis,q,Q_angle,Q_axis);
 //    print("Initial data: \n",white);
 //    print("Angle: ",white);
@@ -213,10 +213,10 @@ int main(int argc, char *argv[])
 //
 //    // w to omega
 //    print("_____w to Omega____________\n",magenta);
-//    Vector3d w;
+//    Vector3f w;
 //    w << 1,1.5,2;
 //    Matrix4d Omega;
-//    MatrixXd O_w;
+//    MatrixXf O_w;
 //    w2omega(w,Omega,O_w);
 //    print("Initial data: \n",white);
 //    print(w,white);
@@ -229,9 +229,9 @@ int main(int argc, char *argv[])
 //
 //    // theta to q
 //    print("_____Theta to q____________\n",magenta);
-//    Vector3d theta;
+//    Vector3f theta;
 //    theta << 1,2,3;
-//    Quaterniond qt;
+//    Quaternionf qt;
 //    theta2q(theta,q);
 //    print("Initial data: \n",white);
 //    print("Theta: \n",white);
@@ -243,9 +243,9 @@ int main(int argc, char *argv[])
 //
 //    // R to q
 //    print("_____R to q____________\n",magenta);
-//    Vector3d v2;
-//    Matrix3d R2;
-//    Quaterniond q2;
+//    Vector3f v2;
+//    Matrix3f R2;
+//    Quaternionf q2;
 //    v2 << 5,6,7;
 //    v2R(v2,R2);
 //    R2q(R2,q2);
@@ -259,7 +259,7 @@ int main(int argc, char *argv[])
 //
 //    // R to e
 //    print("_____R to Euler____________\n",magenta);
-//    Vector3d euler;
+//    Vector3f euler;
 //    R2e(R2,euler);
 //    print("Initial data: \n",white);
 //    print("\nRotation Matrix: \n",white);
@@ -284,10 +284,10 @@ int main(int argc, char *argv[])
 //
 //    // qPredict
 //    print("_____Quaternion Prediction____________\n",magenta);
-//    double dt = 1;
+//    float dt = 1;
 //    int met = 1;
-//    Quaterniond qpred;
-//    MatrixXd Q_q,Q_w;
+//    Quaternionf qpred;
+//    MatrixXf Q_q,Q_w;
 //    qPredict(q,w,qpred,dt,met,Q_q,Q_w);
 //    print("Initial data: \n",white);
 //    print("q: \n",white);
@@ -309,7 +309,7 @@ int main(int argc, char *argv[])
 //
 //    // q2R
 //    print("_____q to R____________\n",magenta);
-//    MatrixXd JR_q;
+//    MatrixXf JR_q;
 //    q2R(q,R,JR_q);
 //    print("Initial data: \n",white);
 //    print("q: \n",white);
@@ -322,8 +322,8 @@ int main(int argc, char *argv[])
 //    cout << endl;
 //
 //    print("_____Quaternion Conjugate____________\n",magenta);
-//    MatrixXd Q_qc;
-//    Quaterniond qc;
+//    MatrixXf Q_qc;
+//    Quaternionf qc;
 //    q2qc(q,qc,Q_qc);
 //    print("Initial data: \n",white);
 //    print("q: \n",white);
@@ -336,8 +336,8 @@ int main(int argc, char *argv[])
 //    cout << endl;
 //
 //    print("_____Quaternion to Euler____________\n",magenta);
-//    MatrixXd E_q;
-//    Vector3d e;
+//    MatrixXf E_q;
+//    Vector3f e;
 //    q2e(q,e,E_q);
 //    print("Initial data: \n",white);
 //    print("q: \n",white);
@@ -351,7 +351,7 @@ int main(int argc, char *argv[])
 //
 //    // q to Aaxis
 //    print("_____Quaternion to Angle Axis____________\n",magenta);
-//    MatrixXd Aangle_q,Aaxis_q;
+//    MatrixXf Aangle_q,Aaxis_q;
 //    q2aaxis(q,angle,axis,Aangle_q,Aaxis_q);
 //    print("Initial data: \n",white);
 //    print("\nQuaternion: \n",white);
@@ -369,7 +369,7 @@ int main(int argc, char *argv[])
 //
 //    // e to R
 //    print("_____Euler to R____________\n",magenta);
-//    MatrixXd JR_e;
+//    MatrixXf JR_e;
 //    e2R(euler,R,JR_e);
 //    print("Initial data: \n",white);
 //    print("Euler: \n",white);
@@ -383,7 +383,7 @@ int main(int argc, char *argv[])
 //
 //    // e to q
 //    print("_____Euler to Quaternion____________\n",magenta);
-//    MatrixXd Q_e;
+//    MatrixXf Q_e;
 //    e2q(euler,q,Q_e);
 //    print("Initial data: \n",white);
 //    print("Euler: \n",white);

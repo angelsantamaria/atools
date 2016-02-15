@@ -10,11 +10,11 @@ namespace atools{
   { return l.second < r.second; }
 
 
-  void check_outliers(const MatrixXd& data_raw, const char& met, MatrixXd& data_out, MatrixXd& outliers_idx)
+  void check_outliers(const MatrixXf& data_raw, const char& met, MatrixXf& data_out, MatrixXf& outliers_idx)
   {
     int len_1 = data_raw.cols();
     int max_outliers = len_1;
-    data_out = MatrixXd::Zero(2,len_1);
+    data_out = MatrixXf::Zero(2,len_1);
 
     for (int ii = 0; ii < len_1; ++ii)
     {
@@ -22,7 +22,7 @@ namespace atools{
       data_out(1,ii) = data_raw(0,ii);
     }  
      
-    MatrixXd data = data_out;  
+    MatrixXf data = data_out;  
 
     data = sort_with_idx(data_raw);
 
@@ -33,16 +33,16 @@ namespace atools{
     // CMath_fc math_fc;
 
     // Mean and std deviation
-    double xbar = data.row(1).mean();
-    double stdev = std_deviation(data.row(1),xbar);
+    float xbar = data.row(1).mean();
+    float stdev = std_deviation(data.row(1),xbar);
 
 
     // tau is a vector containing values for Thompson's Tau:
-    MatrixXd tau(38,1);
+    MatrixXf tau(38,1);
     tau << 1.150,1.393,1.572,1.656,1.711,1.749,1.777,1.798,1.815,1.829,1.840,1.849,1.858,1.865,1.871,1.876,1.881,1.885,1.889,1.893,1.896,1.899,1.902,1.904,1.906,1.908,1.910,1.911,1.913,1.914,1.916,1.917,1.919,1.920,1.921,1.922,1.923,1.924;
 
     // Determine the value of stdev times Tau
-    double tauS;
+    float tauS;
     if (len > tau.cols()) 
       tauS=1.960*stdev; //For n > 40
     else
@@ -51,8 +51,8 @@ namespace atools{
 
     // Compare the values of extreme high/low data points with tauS:
     int ii=0;
-    outliers_idx = MatrixXd::Zero(1,data.cols());
-    MatrixXd tmp;
+    outliers_idx = MatrixXf::Zero(1,data.cols());
+    MatrixXf tmp;
     while (max_outliers > 0)
     {  
       if (abs(abs(data(1,data.cols()-1))-xbar) > tauS)
@@ -102,9 +102,9 @@ namespace atools{
     }
   }
 
-  MatrixXd sort_with_idx(const MatrixXd& data_raw)
+  MatrixXf sort_with_idx(const MatrixXf& data_raw)
   {
-    MatrixXd data(2,data_raw.cols());  
+    MatrixXf data(2,data_raw.cols());  
 
     vector<mypair> v(data_raw.cols());
 
@@ -137,10 +137,10 @@ namespace atools{
   COutlier_detector::~COutlier_detector()
   {}
 
-  void COutlier_detector::online_mean_stddev(const double& data)
+  void COutlier_detector::online_mean_stddev(const float& data)
   {
     this->num = this->num + 1;
-    double delta = data - this->mean;
+    float delta = data - this->mean;
     this->mean = this->mean + delta/this->num;
     this->M2 = this->M2 +delta*(data-mean);
 
@@ -150,23 +150,23 @@ namespace atools{
       this->stddev = sqrt(this->M2/(this->num-1));
   }
 
-  bool COutlier_detector::check_if_outlier(const double& data)
+  bool COutlier_detector::check_if_outlier(const float& data)
   {
     online_mean_stddev(data);
 
     // tau is a vector containing values for Thompson's Tau:
-    MatrixXd tau(38,1);
+    MatrixXf tau(38,1);
     tau << 1.150,1.393,1.572,1.656,1.711,1.749,1.777,1.798,1.815,1.829,1.840,1.849,1.858,1.865,1.871,1.876,1.881,1.885,1.889,1.893,1.896,1.899,1.902,1.904,1.906,1.908,1.910,1.911,1.913,1.914,1.916,1.917,1.919,1.920,1.921,1.922,1.923,1.924;
 
     // Determine the value of stdev times Tau
-    double tauS;
+    float tauS;
     if (this->num > tau.cols()) 
       tauS=this->stddev; //For n > 40
       // tauS=1.960*this->stddev; //For n > 40
     else
       tauS=tau(this->num,0)*this->stddev; //For samples of size 3 < n < 40
 
-    double delta = data - this->mean;
+    float delta = data - this->mean;
 
     if(delta > tauS)
       return true;
@@ -174,14 +174,14 @@ namespace atools{
       return false;
   }
 
-  double get_rand()
+  float get_rand()
   {
     // New seed 
     timespec ts;
     clock_gettime(CLOCK_REALTIME, &ts); // Works on Linux
     srand (ts.tv_nsec);
 
-    double r = ((double) rand()/((double) RAND_MAX));
+    float r = ((float) rand()/((float) RAND_MAX));
     return r;
   }
 } // End of atools namespace

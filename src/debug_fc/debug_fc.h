@@ -35,9 +35,9 @@ namespace atools{
     * Print the specified string in the terminal
     */  
     void print(const string& msg, const color& c);
-    void print(const double& msg, const color& c);
-    void print(const MatrixXd& msg, const color& c);
-    void print(const Quaterniond& msg, const color& c);
+    void print(const float& msg, const color& c);
+    void print(const MatrixXf& msg, const color& c);
+    void print(const Quaternionf& msg, const color& c);
     string bash_color(const color& c);
     void restart_white(void);
 }

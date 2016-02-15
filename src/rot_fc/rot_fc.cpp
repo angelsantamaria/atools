@@ -5,16 +5,16 @@ using namespace std;
 
 namespace atools{
 
-double EPS = pow(1,-16);
+float EPS = pow(1,-16);
 
-void v2skew(const Vector3d& v, Matrix3d& M_sk)
+void v2skew(const Vector3f& v, Matrix3f& M_sk)
 { M_sk << 0,-v(2,0),v(1,0),v(2,0),0,-v(0,0),-v(1,0),v(0,0),0; }
 
-void v2skew(const Vector3d& v, Matrix3d& M_sk, MatrixXd& V_sk)
+void v2skew(const Vector3f& v, Matrix3f& M_sk, MatrixXf& V_sk)
 {
 	v2skew(v,M_sk);
 
-	V_sk = MatrixXd::Zero(9,3);
+	V_sk = MatrixXf::Zero(9,3);
 	V_sk.row(0) << 0.0,0.0,0.0;
 	V_sk.row(1) << 0.0,0.0,1.0;
 	V_sk.row(2) << 0.0,-1.0,0.0;	  
@@ -26,28 +26,28 @@ void v2skew(const Vector3d& v, Matrix3d& M_sk, MatrixXd& V_sk)
 	V_sk.row(8) << 0.0,0.0,0.0;
 }
 
-void v2aaxis(const Vector3d& v, double& angle, Vector3d& axis)
+void v2aaxis(const Vector3f& v, float& angle, Vector3f& axis)
 {
 	angle = sqrt(v.dot(v));
 	// if (angle>EPS)
 		axis = v/angle;
 	// else
 	// {
-	// 	axis = Vector3d::Zero();
+	// 	axis = Vector3f::Zero();
 	// 	cout << "here"<<endl;
 	// }
 }
-void v2aaxis(const Vector3d& v, double& angle, Vector3d& axis, MatrixXd& Aangle_v)
+void v2aaxis(const Vector3f& v, float& angle, Vector3f& axis, MatrixXf& Aangle_v)
 {
 	v2aaxis(v,angle,axis);
-	Aangle_v = MatrixXd::Zero(1,3);
+	Aangle_v = MatrixXf::Zero(1,3);
 	if (angle>EPS)
 		Aangle_v = axis.transpose();
 }
-void v2aaxis(const Vector3d& v, double& angle, Vector3d& axis, MatrixXd& Aangle_v, MatrixXd& Aaxis_v)
+void v2aaxis(const Vector3f& v, float& angle, Vector3f& axis, MatrixXf& Aangle_v, MatrixXf& Aaxis_v)
 {
 	v2aaxis(v,angle,axis,Aangle_v);
-	Aaxis_v = MatrixXd::Zero(3,3);
+	Aaxis_v = MatrixXf::Zero(3,3);
 	if (angle>EPS)
 	{
 		Aaxis_v.row(0) << (1.0/angle)-(axis(0,0)*axis(0,0))/angle, -axis(0,0)/angle*axis(1,0), -axis(0,0)/angle*axis(2,0);
@@ -56,78 +56,78 @@ void v2aaxis(const Vector3d& v, double& angle, Vector3d& axis, MatrixXd& Aangle_
 	}	
 }
 
-void v2R(const Vector3d& v, Matrix3d& R)
+void v2R(const Vector3f& v, Matrix3f& R)
 {
-	double angle;
-	Vector3d axis;
+	float angle;
+	Vector3f axis;
 	v2aaxis(v,angle,axis); 
 
-	double ca  = cos(angle);
-	Vector3d sau = sin(angle)*axis;
-	Matrix3d M_sk(3,3);
+	float ca  = cos(angle);
+	Vector3f sau = sin(angle)*axis;
+	Matrix3f M_sk(3,3);
 	v2skew(sau,M_sk);
 
-	R = ca*Matrix3d::Identity() + M_sk + ((1.0-ca)*axis)*axis.transpose();
+	R = ca*Matrix3f::Identity() + M_sk + ((1.0-ca)*axis)*axis.transpose();
 }
 
-void v2q(const Vector3d& v, Quaterniond& q)
+void v2q(const Vector3f& v, Quaternionf& q)
 {
-	double angle;
-	Vector3d axis;
+	float angle;
+	Vector3f axis;
 	v2aaxis(v,angle,axis);
     aaxis2q(angle,axis,q);
 
 }
-void v2q(const Vector3d& v, Quaterniond& q, MatrixXd& Q_v)
+void v2q(const Vector3f& v, Quaternionf& q, MatrixXf& Q_v)
 {
-	double a = sqrt(v.dot(v));
+	float a = sqrt(v.dot(v));
 
 	if (a<EPS)
 	{
 		q.w() = 1.0-pow(v.norm(),2.0/8.0);
 		q.vec() = v/2.0;
 		Q_v.row(0) << -1.0/4.0*v.transpose();
-		Q_v.block(1,0,3,3) = 0.5*Matrix3d::Identity();
+		Q_v.block(1,0,3,3) = 0.5*Matrix3f::Identity();
 	}
 	else
 	{
-		double angle;
-		Vector3d axis;
-		MatrixXd Aangle_v,Aaxis_v,Q_angle,Q_axis;
+		float angle;
+		Vector3f axis;
+		MatrixXf Aangle_v,Aaxis_v,Q_angle,Q_axis;
 		v2aaxis(v,angle,axis,Aangle_v,Aaxis_v);
 	  	aaxis2q(angle,axis,q,Q_angle,Q_axis);
 	    Q_v = Q_angle*Aangle_v + Q_axis*Aaxis_v;		
 	}
 }
 
-void aaxis2q(const double& angle, const Vector3d& axis, Quaterniond& q)
-{ q = AngleAxisd(angle, axis); }
+void aaxis2q(const float& angle, const Vector3f& axis, Quaternionf& q)
+{ q = AngleAxisf(angle, axis); }
 
-void aaxis2q(const double& angle, const Vector3d& axis, Quaterniond& q, MatrixXd& Q_angle)
+void aaxis2q(const float& angle, const Vector3f& axis, Quaternionf& q, MatrixXf& Q_angle)
 {
 	aaxis2q(angle,axis,q);
-	Q_angle = MatrixXd::Zero(4,1);
+	Q_angle = MatrixXf::Zero(4,1);
 	Q_angle << -sin(angle/2.0)/2.0, (cos(angle/2.0)/2.0)*axis;
 }
-void aaxis2q(const double& angle, const Vector3d& axis, Quaterniond& q, MatrixXd& Q_angle, MatrixXd& Q_axis)
+void aaxis2q(const float& angle, const Vector3f& axis, Quaternionf& q, MatrixXf& Q_angle, MatrixXf& Q_axis)
 {
 	aaxis2q(angle,axis,q,Q_angle);
-	Q_axis = MatrixXd::Zero(4,3);
-	Q_axis << 0.0,0.0,0.0,sin(angle/2.0)*Matrix3d::Identity();
+	Q_axis = MatrixXf::Zero(4,3);
+	Q_axis << 0.0,0.0,0.0,sin(angle/2.0)*Matrix3f::Identity();
 }
 
-void w2omega(const Vector3d& w, Matrix4d& Omega)
+void w2omega(const Vector3f& w, Matrix4f& Omega)
 {
 	Omega.row(0) << 0.0,-w.transpose();
 	Omega.col(0) << 0.0,w;
-	Matrix3d M_sk(3,3);
+	Matrix3f M_sk(3,3);
 	v2skew(-w,M_sk);
 	Omega.block(1,1,3,3) = M_sk;
 }
-void w2omega(const Vector3d& w, Matrix4d& Omega, MatrixXd& O_w)
+void w2omega(const Vector3f& w, Matrix4f& Omega, MatrixXf& O_w)
 {
 	w2omega(w,Omega);
-	O_w = MatrixXd::Zero(16,3);
+	O_w = MatrixXf::Zero(16,3);
 	O_w.row(0) << 0.0,0.0,0.0;
 	O_w.row(1) << 1.0,0.0,0.0;
 	O_w.row(2) << 0.0,1.0,0.0;
@@ -146,9 +146,9 @@ void w2omega(const Vector3d& w, Matrix4d& Omega, MatrixXd& O_w)
 	O_w.row(15) << 0.0,0.0,0.0;
 }
 
-void theta2q(const Vector3d& theta, Quaterniond& q)
+void theta2q(const Vector3f& theta, Quaternionf& q)
 {
-	VectorXd qv = VectorXd::Zero(4,1);
+	VectorXf qv = VectorXf::Zero(4,1);
 	qv(0,0)=1.0;
 	qv.block(1,0,3,1) = theta/2.0;
 	q.w()=qv(0,0);
@@ -157,30 +157,30 @@ void theta2q(const Vector3d& theta, Quaterniond& q)
 	q.z()=qv(3,0);
 }
 
-void R2q(const Matrix3d& R, Quaterniond& q)
-{ q = Quaterniond(R); }
+void R2q(const Matrix3f& R, Quaternionf& q)
+{ q = Quaternionf(R); }
 
-void R2e(const Matrix3d& R, Vector3d& e)
+void R2e(const Matrix3f& R, Vector3f& e)
 {
 	// e = R.eulerAngles(2,1,0);
-	Vector3d et = R.eulerAngles(2,1,0);
+	Vector3f et = R.eulerAngles(2,1,0);
 	e(0,0)=et(2,0);
 	e(1,0)=et(1,0);
 	e(2,0)=et(0,0);
 }
 
-void qProd(const Quaterniond& q1,const Quaterniond& q2, Quaterniond& q)
+void qProd(const Quaternionf& q1,const Quaternionf& q2, Quaternionf& q)
 {	q = q1*q2; }
 
-void qPredict(const Quaterniond& q, const Vector3d& w, Quaterniond& qpred)
+void qPredict(const Quaternionf& q, const Vector3f& w, Quaternionf& qpred)
 { qPredict(q,w,qpred,1,1); }
-void qPredict(const Quaterniond& q, const Vector3d& w, Quaterniond& qpred, const double& dt)
+void qPredict(const Quaternionf& q, const Vector3f& w, Quaternionf& qpred, const float& dt)
 { qPredict(q,w,qpred,dt,1); }
-void qPredict(const Quaterniond& q, const Vector3d& w, Quaterniond& qpred, const double& dt, const int& met)
+void qPredict(const Quaternionf& q, const Vector3f& w, Quaternionf& qpred, const float& dt, const int& met)
 {
-	Quaterniond qn;
-	Matrix4d Omega;
-	Vector4d qv;
+	Quaternionf qn;
+	Matrix4f Omega;
+	Vector4f qv;
 
 	switch (met)
 	{
@@ -190,7 +190,7 @@ void qPredict(const Quaterniond& q, const Vector3d& w, Quaterniond& qpred, const
 			qn = qv + 0.5*dt*(Omega*qv);
 			break;
 		case 1:	//Exact method
-			Quaterniond q2;
+			Quaternionf q2;
 			v2q(w*dt,q2); 
 			qProd(q,q2,qn); // True value - Jacobians based on Euler form
 			break;
@@ -200,47 +200,47 @@ void qPredict(const Quaterniond& q, const Vector3d& w, Quaterniond& qpred, const
 
 	qpred = qn.normalized(); // Euler integration - fits with Jacobians
 }
-void qPredict(const Quaterniond& q, const Vector3d& w, Quaterniond& qpred, const double& dt, const int& met, MatrixXd& Q_q)
+void qPredict(const Quaternionf& q, const Vector3f& w, Quaternionf& qpred, const float& dt, const int& met, MatrixXf& Q_q)
 {
 	qPredict(q,w,qpred,dt,met); //run with method 'exact'
 
-	Matrix4d Omega;
+	Matrix4f Omega;
 	w2omega(w,Omega);
 
-	Q_q = Matrix4d::Zero();
-	Q_q = Matrix4d::Identity()+0.5*dt*Omega;
+	Q_q = Matrix4f::Zero();
+	Q_q = Matrix4f::Identity()+0.5*dt*Omega;
 }
-void qPredict(const Quaterniond& q, const Vector3d& w, Quaterniond& qpred, const double& dt, const int& met, MatrixXd& Q_q, MatrixXd& Q_w)
+void qPredict(const Quaternionf& q, const Vector3f& w, Quaternionf& qpred, const float& dt, const int& met, MatrixXf& Q_q, MatrixXf& Q_w)
 {
 	qPredict(q,w,qpred,dt,met,Q_q); //run with method 'exact'
-	MatrixXd Pi;
+	MatrixXf Pi;
 	q2Pi(q,Pi);
-	Q_w = MatrixXd::Zero(4,3);
+	Q_w = MatrixXf::Zero(4,3);
 	Q_w = 0.5*dt*Pi;
 }
 
-void q2Pi(const Quaterniond& q,MatrixXd& Pi)
+void q2Pi(const Quaternionf& q,MatrixXf& Pi)
 {
-	Pi = MatrixXd::Zero(4,3);
+	Pi = MatrixXf::Zero(4,3);
 	Pi.row(0) << -q.x(), -q.y(), -q.z();
     Pi.row(1) <<  q.w(), -q.z(),  q.y();
 	Pi.row(2) <<  q.z(),  q.w(), -q.x();
     Pi.row(3) << -q.y(),  q.x(),  q.w();
 }
 
-void q2R(const Quaterniond& q, Matrix3d& R)
+void q2R(const Quaternionf& q, Matrix3f& R)
 { R = q.matrix(); }
 
-void q2R(const Quaterniond& q, Matrix3d& R, MatrixXd& JR_q)
+void q2R(const Quaternionf& q, Matrix3f& R, MatrixXf& JR_q)
 {
 	R = q.matrix();
-	double a,b,c,d;
+	float a,b,c,d;
 	a=2.0*q.w();
 	b=2.0*q.x();
 	c=2.0*q.y();
 	d=2.0*q.z();
 
-	JR_q = MatrixXd::Zero(9,4);
+	JR_q = MatrixXf::Zero(9,4);
 	JR_q.row(0) <<  a, b,-c,-d;
 	JR_q.row(1) <<  d, c, b, a;
 	JR_q.row(2) << -c, d,-a, b;
@@ -252,25 +252,25 @@ void q2R(const Quaterniond& q, Matrix3d& R, MatrixXd& JR_q)
 	JR_q.row(8) <<  a,-b,-c, d;
 }
 
-void q2qc(const Quaterniond& q, Quaterniond& qc)
+void q2qc(const Quaternionf& q, Quaternionf& qc)
 { qc = q.conjugate(); }
 
-void q2qc(const Quaterniond& q, Quaterniond& qc, MatrixXd& Q_qc)
+void q2qc(const Quaternionf& q, Quaternionf& qc, MatrixXf& Q_qc)
 {
 	qc = q.conjugate();
-	Q_qc = MatrixXd::Zero(4,4);
+	Q_qc = MatrixXf::Zero(4,4);
 	Q_qc.diagonal() << 1.0,-1.0,-1.0,-1.0;
 }
 
-void q2e(const Quaterniond& q, Vector3d& e)
+void q2e(const Quaternionf& q, Vector3f& e)
 {
-	double a,b,c,d;
+	float a,b,c,d;
 	a=q.w();
 	b=q.x();
 	c=q.y();
 	d=q.z();
 
-	double y1,x1,z2,y3,x3;
+	float y1,x1,z2,y3,x3;
 	y1 =  2.0*c*d + 2.0*a*b;
 	x1 =  a*a - b*b - c*c + d*d;
 	z2 = -2.0*b*d + 2.0*a*c;
@@ -280,15 +280,15 @@ void q2e(const Quaterniond& q, Vector3d& e)
     e << atan2(y1,x1),asin(z2),atan2(y3,x3);
 }
 
-void q2e(const Quaterniond& q, Vector3d& e, MatrixXd& E_q)
+void q2e(const Quaternionf& q, Vector3f& e, MatrixXf& E_q)
 {
-	double a,b,c,d;
+	float a,b,c,d;
 	a=q.w();
 	b=q.x();
 	c=q.y();
 	d=q.z();
 
-	double y1,x1,z2,y3,x3;
+	float y1,x1,z2,y3,x3;
 	y1 =  2.0*c*d + 2.0*a*b;
 	x1 =  a*a - b*b - c*c + d*d;
 	z2 = -2.0*b*d + 2.0*a*c;
@@ -297,46 +297,46 @@ void q2e(const Quaterniond& q, Vector3d& e, MatrixXd& E_q)
 
     e << atan2(y1,x1),asin(z2),atan2(y3,x3);	
 
-    Vector4d dx1dq,dy1dq,dz2dq,dx3dq,dy3dq,de1dq,de2dq,de3dq;
+    Vector4f dx1dq,dy1dq,dz2dq,dx3dq,dy3dq,de1dq,de2dq,de3dq;
     dx1dq << 2.0*a,-2.0*b,-2.0*c, 2.0*d;
     dy1dq << 2.0*b, 2.0*a, 2.0*d, 2.0*c;
     dz2dq << 2.0*c,-2.0*d, 2.0*a,-2.0*b;
     dx3dq << 2.0*a, 2.0*b,-2.0*c,-2.0*d;
     dy3dq << 2.0*d, 2.0*c, 2.0*b, 2.0*a;
 
-    double de1dx1,de1dy1,de2dz2,de3dx3,de3dy3;
+    float de1dx1,de1dy1,de2dz2,de3dx3,de3dy3;
     de1dx1 = -y1/(x1*x1 + y1*y1);
     de1dy1 =  x1/(x1*x1 + y1*y1);
     de2dz2 = 1.0/sqrt(1.0-z2*z2);
     de3dx3 = -y3/(x3*x3 + y3*y3);
     de3dy3 =  x3/(x3*x3 + y3*y3);
 
-    E_q = MatrixXd::Zero(3,4);
+    E_q = MatrixXf::Zero(3,4);
 
     E_q.row(0) = de1dx1*dx1dq + de1dy1*dy1dq;
     E_q.row(1) = de2dz2*dz2dq;
     E_q.row(2) = de3dx3*dx3dq + de3dy3*dy3dq;
 }
 
-void q2aaxis(const Quaterniond& q, double& angle, Vector3d& axis)
+void q2aaxis(const Quaternionf& q, float& angle, Vector3f& axis)
 {
 	axis << q.x(),q.y(),q.z();
 	axis = axis/axis.norm();
 	angle = 2.0*acos(q.w());
 }
-void q2aaxis(const Quaterniond& q, double& angle, Vector3d& axis, MatrixXd& Aangle_q)
+void q2aaxis(const Quaternionf& q, float& angle, Vector3f& axis, MatrixXf& Aangle_q)
 {
 	q2aaxis(q,angle,axis);
-	Aangle_q = MatrixXd::Zero(1,4);
+	Aangle_q = MatrixXf::Zero(1,4);
 	Aangle_q << -2.0/sqrt(1.0-q.w()*q.w()),0.0,0.0,0.0;	
 }
-void q2aaxis(const Quaterniond& q, double& angle, Vector3d& axis, MatrixXd& Aangle_q, MatrixXd& Aaxis_q)
+void q2aaxis(const Quaternionf& q, float& angle, Vector3f& axis, MatrixXf& Aangle_q, MatrixXf& Aaxis_q)
 {
 	q2aaxis(q,angle,axis,Aangle_q);
 
-	Aaxis_q = MatrixXd::Zero(3,4);
-	double den = pow(pow(abs(q.x()),2) + pow(abs(q.y()),2) + pow(abs(q.z()),2),1.5);
-	double s = pow(abs(q.x()),2) + pow(abs(q.y()),2) + pow(abs(q.z()),2);
+	Aaxis_q = MatrixXf::Zero(3,4);
+	float den = pow(pow(abs(q.x()),2) + pow(abs(q.y()),2) + pow(abs(q.z()),2),1.5);
+	float s = pow(abs(q.x()),2) + pow(abs(q.y()),2) + pow(abs(q.z()),2);
 
 	Aaxis_q(0,0) = 0.0;
 	Aaxis_q(0,1) = (s - q.x()*abs(q.x())*sign(q.x()))/den;
@@ -352,17 +352,17 @@ void q2aaxis(const Quaterniond& q, double& angle, Vector3d& axis, MatrixXd& Aang
     Aaxis_q(2,3) = (s - q.z()*abs(q.z())*sign(q.z()))/den;
 }
 
-void e2R(const Vector3d& e, Matrix3d& R)
+void e2R(const Vector3f& e, Matrix3f& R)
 {
-	R = AngleAxisd(e(2), Vector3d::UnitZ())*
-		AngleAxisd(e(1), Vector3d::UnitY())*
-		AngleAxisd(e(0), Vector3d::UnitX());
+	R = AngleAxisf(e(2), Vector3f::UnitZ())*
+		AngleAxisf(e(1), Vector3f::UnitY())*
+		AngleAxisf(e(0), Vector3f::UnitX());
 }
-void e2R(const Vector3d& e, Matrix3d& R, MatrixXd& JR_e)
+void e2R(const Vector3f& e, Matrix3f& R, MatrixXf& JR_e)
 {
 	e2R(e,R);
 
-	double sr,cr,sp,cp,sy,cy;
+	float sr,cr,sp,cp,sy,cy;
 	sr = sin(e(0));
 	cr = cos(e(0));
 	sp = sin(e(1));
@@ -370,7 +370,7 @@ void e2R(const Vector3d& e, Matrix3d& R, MatrixXd& JR_e)
 	sy = sin(e(2));
 	cy = cos(e(2));
 
-	JR_e = MatrixXd::Zero(9,3);
+	JR_e = MatrixXf::Zero(9,3);
     JR_e.row(0) << 0.0,-sp*cy,-cp*sy;
     JR_e.row(1) << 0.0,-sp*sy,cp*cy;
     JR_e.row(2) << 0.0,-cp,0.0;
@@ -382,18 +382,18 @@ void e2R(const Vector3d& e, Matrix3d& R, MatrixXd& JR_e)
     JR_e.row(8) << -sr*cp,-cr*sp,0.0;
 }
 
-void e2q(const Vector3d& e, Quaterniond& q)
+void e2q(const Vector3f& e, Quaternionf& q)
 {
-	q = Quaterniond(AngleAxisd(e(2), Vector3d::UnitZ())*
-				 AngleAxisd(e(1), Vector3d::UnitY())*
-				 AngleAxisd(e(0), Vector3d::UnitX()));
+	q = Quaternionf(AngleAxisf(e(2), Vector3f::UnitZ())*
+				 AngleAxisf(e(1), Vector3f::UnitY())*
+				 AngleAxisf(e(0), Vector3f::UnitX()));
 
 }
-void e2q(const Vector3d& e, Quaterniond& q, MatrixXd& Q_e)
+void e2q(const Vector3f& e, Quaternionf& q, MatrixXf& Q_e)
 {
 	e2q(e,q);
 
-	double sr,sp,sy,cr,cp,cy;
+	float sr,sp,sy,cr,cp,cy;
     sr = sin(e(0)/2.0);
     sp = sin(e(1)/2.0);
     sy = sin(e(2)/2.0);
@@ -401,7 +401,7 @@ void e2q(const Vector3d& e, Quaterniond& q, MatrixXd& Q_e)
     cp = cos(e(1)/2.0);
     cy = cos(e(2)/2.0);
 
-	Q_e = MatrixXd::Zero(4,3);
+	Q_e = MatrixXf::Zero(4,3);
 	Q_e.row(0) << -cy*cp*sr+sy*sp*cr, -cy*sp*cr+sy*cp*sr, -sy*cp*cr+cy*sp*sr;
 	Q_e.row(1) << cy*cp*cr+sy*sp*sr, -cy*sp*sr-sy*cp*cr, -sy*cp*sr-cy*sp*cr;
 	Q_e.row(2) << -cy*sp*sr+sy*cp*cr,  cy*cp*cr-sy*sp*sr, -sy*sp*cr+cy*cp*sr;
