@@ -15,8 +15,6 @@
 
 //Eigen stuff
 #include <eigen3/Eigen/Dense>
-/*#include <Eigen/Eigenvalues>
-#include <Eigen/SVD>*/
 
 //atools stuff
 #include <math_fc.h>

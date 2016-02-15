@@ -5,7 +5,8 @@ using namespace std;
 
 namespace atools{
 
-float EPS = pow(1,-16);
+// Get the floating point relative accurancy
+float EPS = nextafterf(0.0, 1);
 
 void v2skew(const Vector3f& v, Matrix3f& M_sk)
 { M_sk << 0,-v(2,0),v(1,0),v(2,0),0,-v(0,0),-v(1,0),v(0,0),0; }
@@ -29,13 +30,13 @@ void v2skew(const Vector3f& v, Matrix3f& M_sk, MatrixXf& V_sk)
 void v2aaxis(const Vector3f& v, float& angle, Vector3f& axis)
 {
 	angle = sqrt(v.dot(v));
-	// if (angle>EPS)
+	if (angle>EPS)
 		axis = v/angle;
-	// else
-	// {
-	// 	axis = Vector3f::Zero();
-	// 	cout << "here"<<endl;
-	// }
+	else
+	{
+		angle = 0.0;
+		axis = Vector3f::Zero();
+	}
 }
 void v2aaxis(const Vector3f& v, float& angle, Vector3f& axis, MatrixXf& Aangle_v)
 {
@@ -75,7 +76,7 @@ void v2q(const Vector3f& v, Quaternionf& q)
 	float angle;
 	Vector3f axis;
 	v2aaxis(v,angle,axis);
-    aaxis2q(angle,axis,q);
+  aaxis2q(angle,axis,q);
 
 }
 void v2q(const Vector3f& v, Quaternionf& q, MatrixXf& Q_v)
@@ -95,8 +96,8 @@ void v2q(const Vector3f& v, Quaternionf& q, MatrixXf& Q_v)
 		Vector3f axis;
 		MatrixXf Aangle_v,Aaxis_v,Q_angle,Q_axis;
 		v2aaxis(v,angle,axis,Aangle_v,Aaxis_v);
-	  	aaxis2q(angle,axis,q,Q_angle,Q_axis);
-	    Q_v = Q_angle*Aangle_v + Q_axis*Aaxis_v;		
+	 	aaxis2q(angle,axis,q,Q_angle,Q_axis);
+	  Q_v = Q_angle*Aangle_v + Q_axis*Aaxis_v;		
 	}
 }
 
@@ -195,9 +196,6 @@ void qPredict(const Quaternionf& q, const Vector3f& w, Quaternionf& qpred, const
 			qProd(q,q2,qn); // True value - Jacobians based on Euler form
 			break;
 	}
-
-
-
 	qpred = qn.normalized(); // Euler integration - fits with Jacobians
 }
 void qPredict(const Quaternionf& q, const Vector3f& w, Quaternionf& qpred, const float& dt, const int& met, MatrixXf& Q_q)
@@ -295,27 +293,26 @@ void q2e(const Quaternionf& q, Vector3f& e, MatrixXf& E_q)
 	y3 =  2.0*b*c + 2.0*a*d;
 	x3 =  a*a + b*b - c*c - d*d;
 
-    e << atan2(y1,x1),asin(z2),atan2(y3,x3);	
+  e << atan2(y1,x1),asin(z2),atan2(y3,x3);	
 
-    Vector4f dx1dq,dy1dq,dz2dq,dx3dq,dy3dq,de1dq,de2dq,de3dq;
-    dx1dq << 2.0*a,-2.0*b,-2.0*c, 2.0*d;
-    dy1dq << 2.0*b, 2.0*a, 2.0*d, 2.0*c;
-    dz2dq << 2.0*c,-2.0*d, 2.0*a,-2.0*b;
-    dx3dq << 2.0*a, 2.0*b,-2.0*c,-2.0*d;
-    dy3dq << 2.0*d, 2.0*c, 2.0*b, 2.0*a;
+  Vector4f dx1dq,dy1dq,dz2dq,dx3dq,dy3dq,de1dq,de2dq,de3dq;
+  dx1dq << 2.0*a,-2.0*b,-2.0*c, 2.0*d;
+  dy1dq << 2.0*b, 2.0*a, 2.0*d, 2.0*c;
+  dz2dq << 2.0*c,-2.0*d, 2.0*a,-2.0*b;
+  dx3dq << 2.0*a, 2.0*b,-2.0*c,-2.0*d;
+  dy3dq << 2.0*d, 2.0*c, 2.0*b, 2.0*a;
 
-    float de1dx1,de1dy1,de2dz2,de3dx3,de3dy3;
-    de1dx1 = -y1/(x1*x1 + y1*y1);
-    de1dy1 =  x1/(x1*x1 + y1*y1);
-    de2dz2 = 1.0/sqrt(1.0-z2*z2);
-    de3dx3 = -y3/(x3*x3 + y3*y3);
-    de3dy3 =  x3/(x3*x3 + y3*y3);
+  float de1dx1,de1dy1,de2dz2,de3dx3,de3dy3;
+  de1dx1 = -y1/(x1*x1 + y1*y1);
+  de1dy1 =  x1/(x1*x1 + y1*y1);
+  de2dz2 = 1.0/sqrt(1.0-z2*z2);
+  de3dx3 = -y3/(x3*x3 + y3*y3);
+  de3dy3 =  x3/(x3*x3 + y3*y3);
 
-    E_q = MatrixXf::Zero(3,4);
-
-    E_q.row(0) = de1dx1*dx1dq + de1dy1*dy1dq;
-    E_q.row(1) = de2dz2*dz2dq;
-    E_q.row(2) = de3dx3*dx3dq + de3dy3*dy3dq;
+  E_q = MatrixXf::Zero(3,4);
+  E_q.row(0) = de1dx1*dx1dq + de1dy1*dy1dq;
+  E_q.row(1) = de2dz2*dz2dq;
+  E_q.row(2) = de3dx3*dx3dq + de3dy3*dy3dq;
 }
 
 void q2aaxis(const Quaternionf& q, float& angle, Vector3f& axis)
@@ -342,21 +339,21 @@ void q2aaxis(const Quaternionf& q, float& angle, Vector3f& axis, MatrixXf& Aangl
 	Aaxis_q(0,1) = (s - q.x()*abs(q.x())*sign(q.x()))/den;
 	Aaxis_q(0,2) = -(q.x()*abs(q.y())*sign(q.y()))/den;
 	Aaxis_q(0,3) = -(q.x()*abs(q.z())*sign(q.z()))/den;
-    Aaxis_q(1,0) = 0.0;
-    Aaxis_q(1,1) = -(q.x()*abs(q.x())*sign(q.x()))/den;
-    Aaxis_q(1,2) = (s - q.y()*abs(q.y())*sign(q.y()))/den;
-    Aaxis_q(1,3) = -(q.y()*abs(q.z())*sign(q.z()))/den;
-    Aaxis_q(2,0) = 0.0;
-    Aaxis_q(2,1) = -(q.z()*abs(q.x())*sign(q.x()))/den;
-    Aaxis_q(2,2) = -(q.z()*abs(q.y())*sign(q.y()))/den;
-    Aaxis_q(2,3) = (s - q.z()*abs(q.z())*sign(q.z()))/den;
+  Aaxis_q(1,0) = 0.0;
+  Aaxis_q(1,1) = -(q.x()*abs(q.x())*sign(q.x()))/den;
+  Aaxis_q(1,2) = (s - q.y()*abs(q.y())*sign(q.y()))/den;
+  Aaxis_q(1,3) = -(q.y()*abs(q.z())*sign(q.z()))/den;
+  Aaxis_q(2,0) = 0.0;
+  Aaxis_q(2,1) = -(q.z()*abs(q.x())*sign(q.x()))/den;
+  Aaxis_q(2,2) = -(q.z()*abs(q.y())*sign(q.y()))/den;
+  Aaxis_q(2,3) = (s - q.z()*abs(q.z())*sign(q.z()))/den;
 }
 
 void e2R(const Vector3f& e, Matrix3f& R)
 {
 	R = AngleAxisf(e(2), Vector3f::UnitZ())*
-		AngleAxisf(e(1), Vector3f::UnitY())*
-		AngleAxisf(e(0), Vector3f::UnitX());
+		  AngleAxisf(e(1), Vector3f::UnitY())*
+		  AngleAxisf(e(0), Vector3f::UnitX());
 }
 void e2R(const Vector3f& e, Matrix3f& R, MatrixXf& JR_e)
 {
@@ -371,22 +368,22 @@ void e2R(const Vector3f& e, Matrix3f& R, MatrixXf& JR_e)
 	cy = cos(e(2));
 
 	JR_e = MatrixXf::Zero(9,3);
-    JR_e.row(0) << 0.0,-sp*cy,-cp*sy;
-    JR_e.row(1) << 0.0,-sp*sy,cp*cy;
-    JR_e.row(2) << 0.0,-cp,0.0;
-    JR_e.row(3) << sr*sy+cr*sp*cy,sr*cp*cy,-cr*cy-sr*sp*sy;
-    JR_e.row(4) << -sr*cy+cr*sp*sy,sr*cp*sy,-cr*sy+sr*sp*cy;
-    JR_e.row(5) << cr*cp,-sr*sp,0.0;
-    JR_e.row(6) << cr*sy-sr*sp*cy,cr*cp*cy,sr*cy-cr*sp*sy;
-    JR_e.row(7) << -cr*cy-sr*sp*sy,cr*cp*sy,sr*sy+cr*sp*cy;
-    JR_e.row(8) << -sr*cp,-cr*sp,0.0;
+  JR_e.row(0) << 0.0,-sp*cy,-cp*sy;
+  JR_e.row(1) << 0.0,-sp*sy,cp*cy;
+  JR_e.row(2) << 0.0,-cp,0.0;
+  JR_e.row(3) << sr*sy+cr*sp*cy,sr*cp*cy,-cr*cy-sr*sp*sy;
+  JR_e.row(4) << -sr*cy+cr*sp*sy,sr*cp*sy,-cr*sy+sr*sp*cy;
+  JR_e.row(5) << cr*cp,-sr*sp,0.0;
+  JR_e.row(6) << cr*sy-sr*sp*cy,cr*cp*cy,sr*cy-cr*sp*sy;
+  JR_e.row(7) << -cr*cy-sr*sp*sy,cr*cp*sy,sr*sy+cr*sp*cy;
+  JR_e.row(8) << -sr*cp,-cr*sp,0.0;
 }
 
 void e2q(const Vector3f& e, Quaternionf& q)
 {
 	q = Quaternionf(AngleAxisf(e(2), Vector3f::UnitZ())*
-				 AngleAxisf(e(1), Vector3f::UnitY())*
-				 AngleAxisf(e(0), Vector3f::UnitX()));
+				          AngleAxisf(e(1), Vector3f::UnitY())*
+				          AngleAxisf(e(0), Vector3f::UnitX()));
 
 }
 void e2q(const Vector3f& e, Quaternionf& q, MatrixXf& Q_e)
@@ -394,12 +391,12 @@ void e2q(const Vector3f& e, Quaternionf& q, MatrixXf& Q_e)
 	e2q(e,q);
 
 	float sr,sp,sy,cr,cp,cy;
-    sr = sin(e(0)/2.0);
-    sp = sin(e(1)/2.0);
-    sy = sin(e(2)/2.0);
-    cr = cos(e(0)/2.0);
-    cp = cos(e(1)/2.0);
-    cy = cos(e(2)/2.0);
+  sr = sin(e(0)/2.0);
+  sp = sin(e(1)/2.0);
+  sy = sin(e(2)/2.0);
+  cr = cos(e(0)/2.0);
+  cp = cos(e(1)/2.0);
+  cy = cos(e(2)/2.0);
 
 	Q_e = MatrixXf::Zero(4,3);
 	Q_e.row(0) << -cy*cp*sr+sy*sp*cr, -cy*sp*cr+sy*cp*sr, -sy*cp*cr+cy*sp*sr;
