@@ -14,8 +14,6 @@
 #include <numeric> 
 #include <vector>
 #include <eigen3/Eigen/Dense>
-/*#include <Eigen/Eigenvalues>
-#include <Eigen/SVD>*/
 
 #include <math_fc.h>
 

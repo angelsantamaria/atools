@@ -28,9 +28,9 @@ ADD_LIBRARY(atools SHARED ${sources})
 
 # link necessary libraries
 ## All
-#TARGET_LINK_LIBRARIES(atools ${EIGEN3_LIBRARY} ${Boost_LIBRARIES} ${OpenCV_LIBS} rt) 
+#TARGET_LINK_LIBRARIES(atools ${Boost_LIBRARIES} ${OpenCV_LIBS} rt) 
 ## W/o OpenCV
-TARGET_LINK_LIBRARIES(atools ${EIGEN3_LIBRARY} ${Boost_LIBRARIES} rt) 
+TARGET_LINK_LIBRARIES(atools ${Boost_LIBRARIES} rt) 
 
 # install
 INSTALL(TARGETS atools

@@ -13,9 +13,7 @@
 #include <numeric> 
 #include <vector>
 #include <eigen3/Eigen/Dense>
-/*#include <Eigen/Eigenvalues>
-#include <Eigen/SVD>
-*/
+
 using namespace Eigen;
 using namespace std;
 
