@@ -118,8 +118,8 @@ namespace atools{
     *   Omega:  Omega matrix.
     *   J_w (optional): Jacobian r.t. w.
     */
-    void w2omega(const Vector3f& w, Matrix4d& Omega);
-    void w2omega(const Vector3f& w, Matrix4d& Omega, MatrixXf& O_w);
+    void w2omega(const Vector3f& w, Matrix4f& Omega);
+    void w2omega(const Vector3f& w, Matrix4f& Omega, MatrixXf& O_w);
 
     /**
     * \brief Theta vector (minimal representation) to quaternion
